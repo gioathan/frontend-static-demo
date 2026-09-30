@@ -19,5 +19,5 @@ export function AppProviders({ initialUser, children }: { initialUser: UserPubli
         </LoginModalProvider>
       </ToastProvider>
     </AuthProvider>
-  );
+  ); 
 }
