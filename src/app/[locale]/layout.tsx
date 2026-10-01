@@ -9,6 +9,7 @@ import { getCurrentUser } from "@/lib/auth-server";
 import { AppProviders } from "@/components/layout/AppProviders";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
+import { Marquee } from "@/components/layout/Marquee";
 import { MobileBottomNav } from "@/components/layout/MobileBottomNav";
 import "../globals.css";
 
@@ -40,6 +41,7 @@ export default async function LocaleLayout({
         <NextIntlClientProvider messages={messages}>
           <AppProviders initialUser={user}>
             <Header />
+            <Marquee />
             <main className="mx-auto max-w-[1280px] px-4 pb-24 md:px-8 md:pb-0">{children}</main>
             <Footer />
             <MobileBottomNav />

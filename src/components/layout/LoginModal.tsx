@@ -11,22 +11,18 @@ import { Modal } from "@/components/ui/Modal";
 import { Button } from "@/components/ui/Button";
 import { Input, Label, FieldError } from "@/components/ui/Input";
 import { Checkbox } from "@/components/ui/Checkbox";
-import { GoogleSignInButton } from "./GoogleSignInButton";
+import { PasswordInput } from "@/components/ui/PasswordInput";
+import { GoogleSignInButton, GOOGLE_SSO_ENABLED } from "./GoogleSignInButton";
 import { useAuth } from "@/lib/auth-context";
 import { useLoginModal } from "@/lib/login-modal-context";
 import { ApiError } from "@/lib/api";
 import { errorMessageKey } from "@/lib/error-messages";
+import { STRONG_PASSWORD_REGEX } from "@/lib/password";
 
 const loginSchema = z.object({
   email: z.string().email(),
   password: z.string().min(1),
   rememberMe: z.boolean().default(false),
-});
-
-const signupSchema = z.object({
-  fullName: z.string().min(1),
-  email: z.string().email(),
-  password: z.string().min(8),
 });
 
 function LoginForm({ onDone }: { onDone: () => void }) {
@@ -67,7 +63,7 @@ function LoginForm({ onDone }: { onDone: () => void }) {
             {t("forgotPassword")}
           </Link>
         </div>
-        <Input id="login-password" type="password" autoComplete="current-password" {...register("password")} />
+        <PasswordInput id="login-password" autoComplete="current-password" {...register("password")} />
         <FieldError>{errors.password?.message}</FieldError>
       </div>
       <Controller
@@ -94,6 +90,21 @@ function SignupForm({ onDone }: { onDone: () => void }) {
   const locale = useLocale();
   const { signup } = useAuth();
   const [serverError, setServerError] = useState<string | null>(null);
+
+  const signupSchema = z
+    .object({
+      fullName: z.string().min(1, { message: "Please enter your full name." }),
+      email: z.string().email(),
+      password: z.string().refine((value) => STRONG_PASSWORD_REGEX.test(value), {
+        message: "Password must include upper/lowercase, a number, and a symbol.",
+      }),
+      confirmPassword: z.string().min(1),
+    })
+    .refine((data) => data.password === data.confirmPassword, {
+      path: ["confirmPassword"],
+      message: "Passwords do not match.",
+    });
+
   const {
     register,
     handleSubmit,
@@ -124,9 +135,15 @@ function SignupForm({ onDone }: { onDone: () => void }) {
       </div>
       <div>
         <Label htmlFor="signup-password">{t("passwordLabel")}</Label>
-        <Input id="signup-password" type="password" autoComplete="new-password" {...register("password")} />
+        <PasswordInput id="signup-password" autoComplete="new-password" {...register("password")} />
         <FieldError>{errors.password?.message}</FieldError>
       </div>
+      <div>
+        <Label htmlFor="signup-confirm-password">{t("confirmPasswordLabel")}</Label>
+        <PasswordInput id="signup-confirm-password" autoComplete="new-password" {...register("confirmPassword")} />
+        <FieldError>{errors.confirmPassword?.message}</FieldError>
+      </div>
+      <p className="text-body-sm text-ink-muted">{t("passwordRequirements")}</p>
       {serverError && <FieldError>{serverError}</FieldError>}
       <Button type="submit" variant="primary" className="w-full" disabled={isSubmitting}>
         {t("signUp")}
@@ -163,13 +180,16 @@ export function LoginModal() {
           </Tabs.Trigger>
         </Tabs.List>
 
-        <GoogleSignInButton onSuccess={handleDone} />
-
-        <div className="my-6 flex items-center gap-4 text-label-md text-ink-muted">
-          <div className="h-px flex-1 bg-ink/10" />
-          {t("or")}
-          <div className="h-px flex-1 bg-ink/10" />
-        </div>
+        {GOOGLE_SSO_ENABLED && (
+          <>
+            <GoogleSignInButton onSuccess={handleDone} />
+            <div className="my-6 flex items-center gap-4 text-label-md text-ink-muted">
+              <div className="h-px flex-1 bg-ink/10" />
+              {t("or")}
+              <div className="h-px flex-1 bg-ink/10" />
+            </div>
+          </>
+        )}
 
         <Tabs.Content value="login">
           <LoginForm onDone={handleDone} />

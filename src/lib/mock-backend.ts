@@ -9,8 +9,10 @@ import {
   DEMO_EMAIL,
   DEMO_PASSWORD,
   getPageContent,
+  getPendingTripComments,
   getRaceCategories,
   getTripDetail,
+  getTripStats,
   listTrips,
   state,
   type Locale,
@@ -88,6 +90,9 @@ export function resolveMock(method: string, path: string, body?: unknown): MockR
     if (!detail) return error(404, "NOT_FOUND", "Trip not found");
     return ok(detail);
   }
+  if (method === "GET" && segments[0] === "trips" && segments[1] === "stats") {
+    return ok(getTripStats());
+  }
 
   // --- Race categories ---
   if (method === "GET" && segments[0] === "race-categories") {
@@ -119,6 +124,9 @@ export function resolveMock(method: string, path: string, body?: unknown): MockR
   // --- Users ---
   if (method === "GET" && segments[0] === "users" && segments[1] === "me" && segments.length === 2) {
     return ok(state.user);
+  }
+  if (method === "GET" && segments[0] === "users" && segments[1] === "me" && segments[2] === "pending-trip-comments") {
+    return ok(getPendingTripComments());
   }
   if (method === "PATCH" && segments[0] === "users" && segments[1] === "me" && segments.length === 2) {
     const b = parsedBody();
@@ -160,7 +168,10 @@ export function resolveMock(method: string, path: string, body?: unknown): MockR
     });
   }
 
-  // --- Contact / newsletter ---
+  // --- Trip comments / contact / newsletter ---
+  if (method === "POST" && segments[0] === "trip-comments") {
+    return ok(undefined, 204);
+  }
   if (method === "POST" && segments[0] === "contact") {
     return ok(undefined, 204);
   }

@@ -18,6 +18,8 @@
   "auth": {
     "emailLabel": "Email",
     "passwordLabel": "Password",
+    "confirmPasswordLabel": "Confirm password",
+    "passwordRequirements": "Use 10+ characters with uppercase, lowercase, a number and a symbol.",
     "forgotPassword": "Forgot password?",
     "rememberMe": "Remember me",
     "logIn": "Log in",

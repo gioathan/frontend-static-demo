@@ -18,6 +18,8 @@
   "auth": {
     "emailLabel": "Email",
     "passwordLabel": "Κωδικός",
+    "confirmPasswordLabel": "Επανάληψη κωδικού",
+    "passwordRequirements": "Χρησιμοποίησε 10+ χαρακτήρες με κεφαλαία, μικρά, αριθμό και σύμβολο.",
     "forgotPassword": "Ξέχασες τον κωδικό;",
     "rememberMe": "Να με θυμάσαι",
     "logIn": "Σύνδεση",

@@ -61,6 +61,15 @@ const config: Config = {
         // kept separate from the brand's signature flat `hard` shadow.
         soft: "0 20px 40px -16px rgba(20, 22, 26, 0.28)",
       },
+      keyframes: {
+        marquee: {
+          "0%": { transform: "translateX(0)" },
+          "100%": { transform: "translateX(-50%)" },
+        },
+      },
+      animation: {
+        marquee: "marquee 28s linear infinite",
+      },
     },
   },
   plugins: [],

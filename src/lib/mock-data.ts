@@ -8,12 +8,14 @@ import type {
   BookingStatus,
   ContentSection,
   PageContent,
+  PendingTripComment,
   RaceCategory,
   SectionType,
   TripCategory,
   TripDetail,
   TripListItem,
   TravelProfile,
+  TripStats,
   UserPublic,
 } from "@/types/api";
 
@@ -160,6 +162,28 @@ export function getTripDetail(slug: string, locale: Locale): TripDetail | null {
   const raw = TRIPS_RAW.find((t) => t.slug === slug);
   if (!raw) return null;
   return buildTripDetail(raw, locale);
+}
+
+export function getTripStats(): TripStats {
+  const countries = new Set(TRIPS_RAW.map((t) => t.countryEn)).size;
+  return {
+    races_organized: TRIPS_RAW.length,
+    countries,
+  };
+}
+
+export function getPendingTripComments(): PendingTripComment[] {
+  return TRIPS_RAW.slice(0, 3).map((raw, index) => {
+    const trip = buildTripListItem(raw, "en");
+    return {
+      trip_id: trip.id,
+      slug: trip.slug,
+      title: trip.title,
+      cover_image_url: trip.cover_image_url,
+      start_date: trip.start_date,
+      end_date: trip.end_date,
+    };
+  });
 }
 
 // --- Content pages (CMS sections) ---
