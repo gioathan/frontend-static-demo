@@ -42,7 +42,7 @@ export default async function LocaleLayout({
           <AppProviders initialUser={user}>
             <Header />
             <Marquee />
-            <main className="mx-auto max-w-[1280px] px-4 pb-24 md:px-8 md:pb-0">{children}</main>
+            <main className="mx-auto max-w-[1280px] px-4 pb-24 md:px-8 md:pb-16">{children}</main>
             <Footer />
             <MobileBottomNav />
           </AppProviders>

@@ -8,6 +8,14 @@ export interface Cta {
   href: string;
 }
 
+export interface HeroStatCard {
+  title: string;
+  value: string;
+  badge?: string;
+  sublabel?: string;
+  variant?: "light" | "dark-highlight";
+}
+
 export interface HeroData {
   eyebrow?: string;
   headline: string;
@@ -16,12 +24,21 @@ export interface HeroData {
   secondaryCta?: Cta;
   stats?: { value: string; label: string }[];
   imageUrl?: string;
+  statCards?: HeroStatCard[];
 }
+
+export type WidgetMini =
+  | { kind: "sparkline"; label: string; seed: string }
+  | { kind: "progress"; label: string; value: string; percent: number }
+  | { kind: "statGrid"; items: { label: string; value: string }[] }
+  | { kind: "badgeRow"; badges: string[] };
 
 export interface WidgetListItem {
   icon?: string;
   title: string;
   body: string;
+  numberLabel?: string;
+  mini?: WidgetMini;
 }
 export interface WidgetListData {
   eyebrow?: string;
@@ -50,6 +67,7 @@ export interface FaqData {
   eyebrow?: string;
   headline?: string;
   items: { question: string; answer: string }[];
+  layout?: "accordion" | "grid";
 }
 
 export interface ComparisonTableData {
